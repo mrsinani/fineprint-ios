@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		B155953D2F8DFCF100C31765 /* ClerkKit in Frameworks */ = {isa = PBXBuildFile; productRef = A10000012F8E000100000001 /* ClerkKit */; };
+		B155953E2F8DFCF100C31765 /* ClerkKitUI in Frameworks */ = {isa = PBXBuildFile; productRef = A10000022F8E000100000002 /* ClerkKitUI */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		B15594AB2F8DFA9300C31765 /* Fineprint.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Fineprint.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +28,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B155953E2F8DFCF100C31765 /* ClerkKitUI in Frameworks */,
+				B155953D2F8DFCF100C31765 /* ClerkKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +72,8 @@
 			);
 			name = Fineprint;
 			packageProductDependencies = (
+				A10000012F8E000100000001 /* ClerkKit */,
+				A10000022F8E000100000002 /* ClerkKitUI */,
 			);
 			productName = Fineprint;
 			productReference = B15594AB2F8DFA9300C31765 /* Fineprint.app */;
@@ -94,6 +103,9 @@
 			);
 			mainGroup = B15594A22F8DFA9300C31765;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A10000032F8E000100000003 /* XCRemoteSwiftPackageReference "clerk-ios" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B15594AC2F8DFA9300C31765 /* Products */;
 			projectDirPath = "";
@@ -341,6 +353,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A10000032F8E000100000003 /* XCRemoteSwiftPackageReference "clerk-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/clerk/clerk-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A10000012F8E000100000001 /* ClerkKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A10000032F8E000100000003 /* XCRemoteSwiftPackageReference "clerk-ios" */;
+			productName = ClerkKit;
+		};
+		A10000022F8E000100000002 /* ClerkKitUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A10000032F8E000100000003 /* XCRemoteSwiftPackageReference "clerk-ios" */;
+			productName = ClerkKitUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B15594A32F8DFA9300C31765 /* Project object */;
 }

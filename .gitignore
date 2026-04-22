@@ -67,3 +67,5 @@ playground.xcworkspace
 # Environment / config
 .env
 .env.*
+
+.danaid/

@@ -1,17 +1,16 @@
-//
-//  FineprintApp.swift
-//  Fineprint
-//
-//  Created by ⠀ xhexhi on 4/14/26.
-//
-
 import SwiftUI
+import ClerkKit
 
 @main
 struct FineprintApp: App {
+    init() {
+        Clerk.configure(publishableKey: Secrets.clerkPublishableKey)
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(Clerk.shared)
         }
     }
 }
