@@ -51,6 +51,7 @@ struct ChatView: View {
                     Image(systemName: "arrow.up.circle.fill")
                         .font(.title2)
                 }
+                .accessibilityLabel("Send message")
                 .disabled(inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || isSending)
             }
             .padding(.horizontal)

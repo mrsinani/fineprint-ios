@@ -65,6 +65,7 @@ struct DocumentsListView: View {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundStyle(Brand.inkTertiary)
                 }
+                .accessibilityLabel("Clear search")
             }
         }
         .padding(.horizontal, 14)

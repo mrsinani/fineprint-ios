@@ -194,6 +194,7 @@ struct UploadView: View {
                             .font(.system(size: 22))
                             .foregroundStyle(Brand.inkTertiary)
                     }
+                    .accessibilityLabel("Remove selected file")
                 }
             }
             .softCard(padding: 14)

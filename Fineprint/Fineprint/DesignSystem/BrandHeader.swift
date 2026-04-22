@@ -23,6 +23,7 @@ struct BrandHeader: View {
                     .foregroundStyle(Brand.tealDeep)
                     .frame(width: 44, height: 44)
             }
+            .accessibilityLabel("Menu")
         }
         .padding(.horizontal, 20)
         .padding(.top, 4)
