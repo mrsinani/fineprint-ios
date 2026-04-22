@@ -1,11 +1,15 @@
 import SwiftUI
 import UniformTypeIdentifiers
+import VisionKit
 
 struct UploadView: View {
     @State private var isPickerPresented = false
+    @State private var isScannerPresented = false
+    @State private var isProcessingScan = false
     @State private var selectedFileName: String?
     @State private var selectedFileData: Data?
     @State private var selectedFileType: String = "application/pdf"
+    @State private var scannedPageCount: Int?
     @State private var documentType = "Lease Agreement"
     @State private var isUploading = false
     @State private var uploadProgress: String?
@@ -32,8 +36,38 @@ struct UploadView: View {
                     } label: {
                         HStack {
                             Image(systemName: "doc.badge.plus")
-                            Text(selectedFileName ?? "Select a document")
-                                .foregroundStyle(selectedFileName == nil ? .secondary : .primary)
+                            Text("Choose File")
+                                .foregroundStyle(.primary)
+                        }
+                    }
+
+                    if VNDocumentCameraViewController.isSupported {
+                        Button {
+                            isScannerPresented = true
+                        } label: {
+                            HStack {
+                                Image(systemName: "doc.viewfinder")
+                                Text("Scan Document")
+                                    .foregroundStyle(.primary)
+                            }
+                        }
+                    }
+
+                    if isProcessingScan {
+                        HStack {
+                            ProgressView()
+                                .padding(.trailing, 4)
+                            Text("Recognizing text…")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+                    } else if let name = selectedFileName {
+                        HStack {
+                            Image(systemName: "doc.fill")
+                                .foregroundStyle(.green)
+                            Text(name)
+                                .font(.subheadline)
+                                .lineLimit(1)
                         }
                     }
 
@@ -66,7 +100,7 @@ struct UploadView: View {
                         }
                         .frame(maxWidth: .infinity)
                     }
-                    .disabled(selectedFileData == nil || isUploading)
+                    .disabled(selectedFileData == nil || isUploading || isProcessingScan)
                 }
             }
             .navigationTitle("Upload")
@@ -77,6 +111,15 @@ struct UploadView: View {
             ) { result in
                 handleFileSelection(result)
             }
+            .fullScreenCover(isPresented: $isScannerPresented) {
+                DocumentScannerView { images in
+                    isScannerPresented = false
+                    Task { await processScannedImages(images) }
+                } onCancel: {
+                    isScannerPresented = false
+                }
+                .ignoresSafeArea()
+            }
             .navigationDestination(isPresented: $showAnalysis) {
                 if let analysis = analysisResult {
                     AnalysisResultView(
@@ -86,6 +129,30 @@ struct UploadView: View {
                 }
             }
         }
+    }
+
+    private func processScannedImages(_ images: [UIImage]) async {
+        guard !images.isEmpty else { return }
+
+        isProcessingScan = true
+        errorMessage = nil
+        selectedFileName = nil
+        selectedFileData = nil
+
+        let result = await SearchablePDFBuilder.build(from: images)
+
+        let timestamp = DateFormatter.localizedString(
+            from: Date(),
+            dateStyle: .medium,
+            timeStyle: .short
+        ).replacingOccurrences(of: "/", with: "-")
+            .replacingOccurrences(of: ":", with: "-")
+
+        selectedFileName = "Scan \(timestamp).pdf"
+        selectedFileData = result.pdfData
+        selectedFileType = "application/pdf"
+        scannedPageCount = result.pageCount
+        isProcessingScan = false
     }
 
     private func handleFileSelection(_ result: Result<[URL], Error>) {
@@ -101,6 +168,7 @@ struct UploadView: View {
             do {
                 selectedFileData = try Data(contentsOf: url)
                 selectedFileName = url.lastPathComponent
+                scannedPageCount = nil
 
                 let ext = url.pathExtension.lowercased()
                 switch ext {
@@ -153,7 +221,7 @@ struct UploadView: View {
                 fileType: selectedFileType,
                 analysisResult: analysis,
                 documentType: documentType,
-                pageCount: nil,
+                pageCount: scannedPageCount,
                 title: fileName
             )
 
