@@ -4,6 +4,7 @@ import ClerkKitUI
 
 struct SettingsView: View {
     @Environment(Clerk.self) private var clerk
+    @Environment(\.dismiss) private var dismiss
     @State private var showDeleteConfirmation = false
     @State private var showSignOutConfirmation = false
 
@@ -62,6 +63,12 @@ struct SettingsView: View {
                 }
             }
             .navigationTitle("Settings")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Done") { dismiss() }
+                        .fontWeight(.semibold)
+                }
+            }
             .confirmationDialog("Sign Out", isPresented: $showSignOutConfirmation) {
                 Button("Sign Out", role: .destructive) {
                     Task {
